@@ -1,0 +1,29 @@
+﻿@model IEnumerable<uph.dotnet.pz.Models.Customer>
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h2>Lista klientów</h2>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>@Html.DisplayNameFor(m => m.Customer_Id)</th>
+                <th>@Html.DisplayNameFor(m => m.Firstname)</th>
+                <th>@Html.DisplayNameFor(m => m.Lastname)</th>
+                <th>@Html.DisplayNameFor(m => m.Email)</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var emp in Model)
+            {
+                <tr>
+                    <td>@emp.Customer_Id</td>
+                    <td>@emp.Firstname</td>
+                    <td>@emp.Lastname</td>
+                    <td>@emp.Email</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
