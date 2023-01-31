@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Reflection;
 using uph.dotnet.pz.Models;
 
+#pragma warning disable CS8601 // Possible null reference assignment.
 namespace uph.dotnet.pz.Controllers
 {
     public class HomeController : Controller
@@ -54,6 +55,7 @@ namespace uph.dotnet.pz.Controllers
         }
 
         // GET: Home/Delete/x
+        [HttpPost]
         public async Task<IActionResult> Delete(int? id)
         {
             using (con = new SqlConnection(builder.ConnectionString))
@@ -79,10 +81,9 @@ namespace uph.dotnet.pz.Controllers
 
         // POST: Home/Create
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(string? firstname, string? lastname, string? email)
         {
-            
-
             using (con = new SqlConnection(builder.ConnectionString))
             {
                 SqlCommand cmd = new SqlCommand($"INSERT INTO tab_customer (firstname, lastname, email) VALUES ('{firstname}', '{lastname}', '{email}');", con);
