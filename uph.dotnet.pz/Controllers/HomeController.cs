@@ -86,7 +86,8 @@ namespace uph.dotnet.pz.Controllers
         {
             using (con = new SqlConnection(builder.ConnectionString))
             {
-                SqlCommand cmd = new SqlCommand($"INSERT INTO tab_customer (firstname, lastname, email) VALUES ('{firstname}', '{lastname}', '{email}');", con);
+                SqlCommand cmd = new SqlCommand($"INSERT INTO tab_customer (firstname, lastname, email) " +
+                                                $"VALUES ('{firstname}', '{lastname}', '{email}');", con);
                 cmd.CommandType = CommandType.Text;
 
                 await con.OpenAsync();
