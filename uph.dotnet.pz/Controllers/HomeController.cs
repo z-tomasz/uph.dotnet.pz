@@ -3,6 +3,8 @@ using Microsoft.Data.SqlClient;
 using System.Data;
 using System.Diagnostics;
 using System.Reflection;
+using System.Security.Cryptography;
+using System.Text;
 using uph.dotnet.pz.Models;
 
 #pragma warning disable CS8601 // Possible null reference assignment.
@@ -11,6 +13,7 @@ namespace uph.dotnet.pz.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly IConfiguration _configuration;
 
         List<Customer> customerList = new List<Customer>();
 
@@ -18,21 +21,23 @@ namespace uph.dotnet.pz.Controllers
         {
             DataSource = "localhost",
             UserID = "uph",
-            Password = "uph",
+            Password = "uph123",
             InitialCatalog = "uph",
             Encrypt = false
         };
 
         SqlConnection? con;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, IConfiguration configuration)
         {
             _logger = logger;
+            _configuration = configuration;
         }
 
         public async Task<IActionResult> Index()
         {
-            using (con = new SqlConnection(builder.ConnectionString))
+            //using (con = new SqlConnection(builder.ConnectionString))
+            using (con = new SqlConnection(_configuration.GetConnectionString("uph")))
             {
                 SqlCommand cmd = new SqlCommand("SELECT * FROM tab_customer", con);
                 cmd.CommandType = CommandType.Text;
@@ -84,6 +89,10 @@ namespace uph.dotnet.pz.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(string? firstname, string? lastname, string? email)
         {
+            string potential_password = "test";
+            var sha1 = SHA1.Create();
+            string? hash = Convert.ToHexString(sha1.ComputeHash(Encoding.ASCII.GetBytes(potential_password)));
+
             using (con = new SqlConnection(builder.ConnectionString))
             {
                 SqlCommand cmd = new SqlCommand($"INSERT INTO tab_customer (firstname, lastname, email) " +
